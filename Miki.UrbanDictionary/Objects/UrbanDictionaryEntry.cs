@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using System.Web;
 
 namespace Miki.UrbanDictionary.Objects;
 
@@ -41,6 +42,8 @@ public class UrbanDictionaryEntry
     [JsonPropertyName("example")]
     [DataMember(Name = "example")]
     public string Example { get; set; }
+    
+    public string Url => Constants.UserBaseUrl + "define.php?term=" + HttpUtility.UrlEncode(Term);
 
     public int Score => ThumbsUp - ThumbsDown;
 }

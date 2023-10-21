@@ -7,18 +7,33 @@ using Miki.UrbanDictionary.Objects;
 
 namespace Miki.UrbanDictionary;
 
-public class UrbanDictionaryApi
+/// <summary>
+/// Urban Dictionary API wrapper, used to get definitions from Urban Dictionary.
+/// </summary>
+public interface IUrbanDictionaryApi
 {
-    private const string BaseUrl = "http://api.urbandictionary.com/v0/";
-    private const string UserBaseUrl = "https://www.urbandictionary.com/";
+    /// <summary>
+    /// Helper method to get the front-end URL for the user based on the term.
+    /// </summary>
+    string GetUserDefinitionUrl(string term);
+    
+    /// <summary>
+    /// Get definitions based on Urban Dictionary terms.
+    /// </summary>
+    /// <param name="term">The term you are querying on urbandictionary</param>
+    Task<IUrbanDictionaryResponse> SearchTermAsync(string term);
+}
 
+/// <inheritdoc />
+public class UrbanDictionaryApi : IUrbanDictionaryApi
+{
     private readonly HttpClient client;
 
     public UrbanDictionaryApi()
     {
         client = new HttpClient
         {
-            BaseAddress = new Uri(BaseUrl),
+            BaseAddress = new Uri(Constants.BaseUrl),
             DefaultRequestHeaders =
             {
                 { "Accept", "application/json" }
@@ -26,18 +41,11 @@ public class UrbanDictionaryApi
         };
     }
 
-    /// <summary>
-    /// Gets the front-end URL for the user based on the term.
-    /// </summary>
-    /// <param name="term"></param>
-    /// <returns></returns>
+    /// <inheritdoc />
     public string GetUserDefinitionUrl(string term)
-        => UserBaseUrl + "define.php?term=" + HttpUtility.UrlEncode(term);
-
-    /// <summary>
-    /// Get definitions based on Urban Dictionary terms.
-    /// </summary>
-    /// <param name="term">The term you are querying on urbandictionary</param>
+        => Constants.UserBaseUrl + "define.php?term=" + HttpUtility.UrlEncode(term);
+    
+    /// <inheritdoc />
     public async Task<IUrbanDictionaryResponse> SearchTermAsync(string term)
     {
         var post = await client.GetAsync("define?term=" + term.Replace(' ', '+'));
