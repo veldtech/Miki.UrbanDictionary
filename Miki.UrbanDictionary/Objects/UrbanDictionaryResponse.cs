@@ -17,7 +17,7 @@ internal class UrbanDictionaryResponse : IUrbanDictionaryResponse
 
     [JsonPropertyName("list")]
     [DataMember(Name = "list")]
-    public IReadOnlyList<UrbanDictionaryEntry> List { get; set; }
+    public IReadOnlyList<UrbanDictionaryEntry> Entries { get; set; }
 
     [JsonPropertyName("sounds")]
     [DataMember(Name = "sounds")]
